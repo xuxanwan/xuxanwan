@@ -30,7 +30,7 @@ public class FastJsonDemo {
 		
 		String jsonStr = sb.toString();
 		
-		
+		//转换成jsonArray,能够通过iterator遍历,转换的一定要带有[]其实的json串
 		JSONArray jarr = JSONArray.parseArray(jsonStr);
 		for(Iterator<Object> iterator = jarr.iterator();iterator.hasNext();) {
 			JSONObject job = (JSONObject)iterator.next();
@@ -52,13 +52,24 @@ public class FastJsonDemo {
 		sysMenuParent.getSmLists().add(sysMenuParent);
 		
 		String jsonStr= JSON.toJSONString(sysMenuParent);
-		System.out.println(jsonStr);
+		System.out.println("jsonStr:---"+jsonStr);
 		
-		JSONObject jsonObj = new JSONObject();
+		StringBuffer sb = new StringBuffer(jsonStr);
+		sb.insert(0, "[");
+		sb.insert(sb.length(), "]");
 		
+		JSONArray parseArray = JSONArray.parseArray(sb.toString());
+		for(Iterator iter = parseArray.iterator();iter.hasNext();) {
+			System.out.println("###"+iter.next());
+		}
+		
+		//解析json字符串成object类,object中存在的为类似一个map
+		Object object = JSONObject.parse(jsonStr);
+		System.out.println("object:---"+object);
+		
+		//或者指定转换类转换
 		SysMenu temp = JSON.parseObject(jsonStr, SysMenu.class);
-		System.out.println(temp.getMenuDescription());
-		System.out.println(temp.getSmLists());
-		
+		System.out.println("Description:---"+temp.getMenuDescription());
+		System.out.println("SmLists:---"+temp.getSmLists());
 	}
 }
