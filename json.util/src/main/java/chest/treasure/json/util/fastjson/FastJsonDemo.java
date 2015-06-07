@@ -2,6 +2,8 @@ package chest.treasure.json.util.fastjson;
 
 
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 
@@ -10,6 +12,7 @@ import chest.treasure.json.util.fastjson.domain.SysMenu;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
 public class FastJsonDemo {
 	@Test
@@ -37,6 +40,17 @@ public class FastJsonDemo {
 			String weixin = job.getString("weixin").toString();
 			System.out.println(weixin);
 		}
+		
+		//把JSON数据转换成普通字符串列表,也可以是指定类
+		List<String> listList = JSON.parseArray(jsonStr, String.class);
+		System.out.println(listList);
+		
+//		把JSON数据转换成较为复杂的java对象列表
+		List<Map<String, Object>> parseObject = JSON.parseObject(jsonStr,
+				new TypeReference<List<Map<String, Object>>>() {
+				});
+		System.out.println(parseObject);
+		
 	}
 	
 	@Test
@@ -51,6 +65,7 @@ public class FastJsonDemo {
 		sysMenuParent.getSmLists().add(sysMenu);
 		sysMenuParent.getSmLists().add(sysMenuParent);
 		
+//		把java对象转换成JSON数据
 		String jsonStr= JSON.toJSONString(sysMenuParent);
 		System.out.println("jsonStr:---"+jsonStr);
 		
@@ -67,7 +82,7 @@ public class FastJsonDemo {
 		Object object = JSONObject.parse(jsonStr);
 		System.out.println("object:---"+object);
 		
-		//或者指定转换类转换
+		//把JSON数据转换成指定的java对象
 		SysMenu temp = JSON.parseObject(jsonStr, SysMenu.class);
 		System.out.println("Description:---"+temp.getMenuDescription());
 		System.out.println("SmLists:---"+temp.getSmLists());
